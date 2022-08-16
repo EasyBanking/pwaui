@@ -62,7 +62,7 @@ const Menu = [
   {
     name: "Schedules",
     icon: "calendar",
-    path: "/schedules",
+    path: "/schedule",
     visibleFor: ["Admin", "Customer Service"],
   },
   {
