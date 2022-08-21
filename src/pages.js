@@ -7,6 +7,9 @@ import Payment from "./pages/payment";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgetPassword from "./pages/forget-password";
+import Accounts from "./pages/accounts";
+import Users from "./pages/users";
+import Urgents from "./pages/urgents";
 
 // dashboard routes here
 
@@ -34,6 +37,18 @@ const routes = [
   {
     path: "/payments",
     Page: Payment,
+  },
+  {
+    path: "/accounts",
+    Page: Accounts,
+  },
+  {
+    path: "/users",
+    Page: Users,
+  },
+  {
+    path: "/urgents",
+    Page: Urgents,
   },
   {
     path: "/login",
