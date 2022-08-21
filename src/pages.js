@@ -4,6 +4,10 @@ import AddLocation from "./pages/location/add";
 import Transactions from "./pages/transactions";
 import Schedule from "./pages/schedule";
 import Payment from "./pages/payment";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ForgetPassword from "./pages/forget-password";
+
 // dashboard routes here
 
 const routes = [
@@ -30,6 +34,18 @@ const routes = [
   {
     path: "/payments",
     Page: Payment,
+  },
+  {
+    path: "/login",
+    Page: Login,
+  },
+  {
+    path: "/forget-password",
+    Page: ForgetPassword,
+  },
+  {
+    path: "/register",
+    Page: Register,
   },
 ];
 

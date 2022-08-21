@@ -1,6 +1,8 @@
 import { Grid, Text } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Layout from "../../components/Layout"
+import Layout from "../../components/Layout";
+import { AuthGuard } from "../../wrappers/Auth";
+import { useSelector } from "react-redux";
 
 const ResoruceWidge = (props) => {
   const { stats, title, icon } = props;
@@ -42,17 +44,20 @@ const stats = [
 ];
 
 export default function Dashboard() {
+  const user = useSelector((state) => state?.auth?.user);
   return (
-    <Layout>
-      <section className="px-6 flex mt-2">
-        <Grid.Container gap={2}>
-          {stats.map((i, x) => {
-            return (
-              <ResoruceWidge icon={i.icon} title={i.title} stats={i.stats} />
-            );
-          })}
-        </Grid.Container>
-      </section>
-    </Layout>
+    <AuthGuard>
+      <Layout>
+        <section className="px-6 flex mt-2">
+          <Grid.Container gap={2}>
+            {stats.map((i, x) => {
+              return (
+                <ResoruceWidge icon={i.icon} title={i.title} stats={i.stats} />
+              );
+            })}
+          </Grid.Container>
+        </section>
+      </Layout>
+    </AuthGuard>
   );
 }
