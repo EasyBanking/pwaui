@@ -31,7 +31,7 @@ export default function Location(props) {
           onEdit={() => {}}
           onDelete={() => {}}
           title="Transactions"
-          columns={["Transaction_ID", "Transaction_Status", "Type", "Sender","Sender_Username", "Receiver","Receiver_Username", "Amount", "Date"]}
+          columns={["Transaction_ID", "Transaction_Status", "Type", "Sender","Sender_Username", "Receiver","Receiver_Username", "Amount"]}
           rowsPerPage={10}
           actions={[
             // {

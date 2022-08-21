@@ -11,6 +11,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment, useMemo, useRef, useState } from "react";
 import { useClickOutside } from "use-events";
 
+/*
+    action title,
+    action icon
+    action handler
+    action tooltip
+    action color
+*/
+
+/*
+      label: "title",
+      value: "",
+      type: "text",
+      applied: false,
+*/
+
 const SelectableFilter = (props) => {
   const { type, value, label, onChangeValue, options, onApply, applied } =
     props;
@@ -30,10 +45,11 @@ const SelectableFilter = (props) => {
     return [];
   }, [value, options]);
 
+
   return (
     <div className="mb-3 py-3" style={{ width: "200px" }}>
       <div
-        OnPress={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen(!isOpen)}
         className="flex   flex-row items-center justify-between mb-1"
       >
         <Text className="hover:opacity-50 cursor-pointer" h6>
@@ -65,7 +81,7 @@ const SelectableFilter = (props) => {
                 <Fragment key={`sec-opt-${index}`}>
                   <li
                     className="p-1 text-sm cursor-pointer hover:opacity-50"
-                    onPress={() => {
+                    onClick={() => {
                       onChangeValue(option);
                       setIsSelectorOpen(false);
                     }}
@@ -94,7 +110,7 @@ const Filterable = (props) => {
   return (
     <div className="mb-3" style={{ width: "200px" }}>
       <div
-        onPress={() => setIsOpen(!isOpen)}
+        onClick={() => setIsOpen(!isOpen)}
         className="flex flex-row items-center justify-between mb-1"
       >
         <Text className="cursor-pointer hover:opacity-50" h6>
@@ -116,25 +132,31 @@ const Filterable = (props) => {
 };
 
 export default function Resource(props) {
-  const {
-    send_filters,
-    columns,
-    data,
-    title,
-    onSelection,
-    rowsPerPage,
-    onAdd,
-    actions,
-  } = props;
+  const { transactions,columns, data, title, onSelection, rowsPerPage, onAdd, actions } =
+    props;
   const [filters, setFilters] = useState([
+    // {
+    //   label: "Transaction ID",
+    //   value: "",
+    //   type: "text",
+    //   applied: false,
+    // },
     {
-      label: "Location",
-      options: ["Location 1 ", "Location 2 ", "Location 3"],
+      label: "Transaction Type",
+      options: ["INSTANT_PAYMENT", "TRANSFER","WITHDRAWAL","DEPOSIT","RECEIVE"],
+      value:"",
+      type: "select",
+      applied: false,
+    },
+    
+    
+    {
+      label: "Transaction Status",
+      options: ["APPROVED", "PENDING","REJECTED"],
       value: "",
       type: "select",
       applied: false,
     },
-
     {
       label: "date",
       value: "",
@@ -151,7 +173,7 @@ export default function Resource(props) {
           <Text h4 transform="capitalize">
             {title}
           </Text>
-          <Button size="sm" auto onPress={onAdd}>
+          <Button size="sm" auto onClick={onAdd}>
             <FontAwesomeIcon icon="plus" size="xl" />
           </Button>
         </div>
@@ -215,8 +237,7 @@ export default function Resource(props) {
                       );
                     }
                   })}
-                  <Button 
-                  aria-label="Back to the page" color="primary">Apply Filters</Button>
+                  <Button color="primary">Apply Filters</Button>
                 </div>
               </Popover.Content>
             </Popover>
@@ -228,10 +249,10 @@ export default function Resource(props) {
                 //
                 //filter sendID based on the ID
                 props.changeWord(e.target.value);
-                props.send_filters(filters);
                 //setSearchFilter(e.target.value);
                 //
               }}
+
               type="text"
               placeholder="Search"
               color="primary"
@@ -249,7 +270,7 @@ export default function Resource(props) {
                   <Text
                     h6
                     key={`txt-${index}`}
-                    onPress={() => {
+                    onClick={() => {
                       const tmp = [...filters];
                       tmp[index].applied = false;
                       setFilters(tmp);
@@ -303,8 +324,17 @@ export default function Resource(props) {
             })}
             <Table.Column key={"actions"}>actions</Table.Column>
           </Table.Header>
-          <Table.Body items={data} loadingState={data?.length}>
-            {/* <Table.Body items={data} loadingState={data?.length}> */}
+          <Table.Body items={data
+          
+          
+          } loadingState={data?.length}>
+
+
+
+
+
+
+          {/* <Table.Body items={data} loadingState={data?.length}> */}
 
             {(item) => (
               <Table.Row key={item}>
@@ -326,7 +356,7 @@ export default function Resource(props) {
                                     auto
                                     className="mr-2"
                                     size="xs"
-                                    onPress={() => action.handler(item)}
+                                    onClick={() => action.handler(item)}
                                     color={action.color}
                                     rounded
                                   >
