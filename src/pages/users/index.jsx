@@ -5,13 +5,38 @@ import { useState, useEffect } from "react";
 import { AuthGuard } from "../../wrappers/Auth";
 import HttpClient from "../../Http-Client";
 import Resource from "../../components/Resource";
+import { useMemo } from "react";
 
 export default function Location(props) {
   const router = useNavigate();
 
   const [users, setUsers] = useState([]);
 
-  const [searchFilter, setSearchFilter] = useState("");
+  const [txt, setText] = useState("");
+
+  const filters = useMemo(() => ["username", "email", "role"], []);
+
+  const memoziedUsers = useMemo(() => {
+    if (txt !== "") {
+      return users.filter((l) => {
+        let status = false;
+
+        for (let i in filters) {
+          const f = String(l[filters[i]]);
+
+          console.log();
+
+          if (f.toLowerCase().includes(txt.toLowerCase())) {
+            status = true;
+          }
+        }
+
+        return status;
+      });
+    } else {
+      return users;
+    }
+  }, [users, txt]);
 
   useEffect(() => {
     HttpClient.get("/admin/users")
@@ -29,8 +54,11 @@ export default function Location(props) {
       <Layout>
         <div className="mt-4 min-h-screen">
           <Resource
+            onSearch={(e) => {
+              setText(e.target.value);
+            }}
             columns={["_id", "username", "email", "role"]}
-            data={users}
+            data={memoziedUsers}
             onSelection={() => {}}
             rowsPerPage={10}
             onAdd={() => {
@@ -41,7 +69,7 @@ export default function Location(props) {
                 title: "edit",
                 icon: "edit",
                 handler: (row) => {
-                  router(`/users/${row._id}`, { replace: true });
+                  router(`/users/edit/${row._id}`, { replace: true });
                 },
               },
               {
@@ -53,6 +81,7 @@ export default function Location(props) {
                     HttpClient.delete(`/admin/users/${row._id}`)
                       .then((res) => {
                         console.log(res);
+                        setUsers(users.filter((u) => u?._id !== row?._id));
                       })
                       .catch(console.log);
                   }

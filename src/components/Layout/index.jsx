@@ -1,6 +1,6 @@
-import { Text, Grid, Container } from "@nextui-org/react";
+import { Text, Grid, Container, Input } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 const Body = (props) => {
   return (
@@ -72,9 +72,15 @@ const Menu = [
     visibleFor: ["Admin"],
   },
   {
-    name: "Settings",
-    icon: "cog",
-    path: "/settings",
+    name: "Urgents",
+    icon: "info",
+    path: "/urgents",
+    visibleFor: ["Admin"],
+  },
+  {
+    name: "Chat",
+    icon: "headset",
+    path: "/chat",
     visibleFor: ["Admin"],
   },
 ];
@@ -82,30 +88,31 @@ const Menu = [
 const isActiveLink = (location, path) => location.pathname === path;
 
 const TopBar = (props) => {
+  const router = useNavigate();
   return (
     <div className="w-full bg-white">
       <div className="px-4 py-6 ">
         <div className="flex flex-row justify-between items-center ">
-          <button className="px-2 hover:text-info">
-            <FontAwesomeIcon icon="search" />
-            <span className="ml-2  text-sm">enter your search here ?</span>
-          </button>
+          <Input
+            className="ml-5"
+            placeholder="search here"
+            contentLeft={<FontAwesomeIcon icon="search" />}
+          />
           <div>
-            <button className="hover:opacity-80 relative">
-              <FontAwesomeIcon icon={"bell"} size="xl" />
-              <small
-                className="absolute text-white bg-error w-4 h-4 rounded-full top-0 -left-2"
-                style={{ fontSize: 10, paddingTop: "2.5px" }}
-              >
-                5
-              </small>
-            </button>
-
-            <button className="hover:opacity-80 bg-primary w-6 h-6  mx-4 text-white rounded-full">
+            <button
+              onClick={() => router("/profile")}
+              className="hover:opacity-80 bg-primary w-6 h-6  mx-4 text-white rounded-full"
+            >
               <span>i</span>
             </button>
 
-            <button className="hover:opacity-80">
+            <button
+              className="hover:opacity-80"
+              onClick={() => {
+                localStorage?.removeItem("X-AUTH-TOKEN");
+                window.location.replace("/login");
+              }}
+            >
               <FontAwesomeIcon
                 icon={"circle-right"}
                 size="xl"

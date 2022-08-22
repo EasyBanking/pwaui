@@ -1,7 +1,7 @@
 import Layout from "../../components/Layout";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { AuthGuard } from "../../wrappers/Auth";
 import HttpClient from "../../Http-Client";
 import Resource from "../../components/Resource";
@@ -11,12 +11,35 @@ export default function Location(props) {
 
   const [locations, setlocations] = useState([]);
 
-  const [searchFilter, setSearchFilter] = useState("");
+  const [txt, setText] = useState("");
+
+  const filters = useMemo(() => ["address", "latitude", "longitude"], []);
+
+  const memoziedLocations = useMemo(() => {
+    if (txt !== "") {
+      return locations.filter((l) => {
+        let status = false;
+
+        for (let i in filters) {
+          const f = String(l[filters[i]]);
+
+          console.log();
+
+          if (f.toLowerCase().includes(txt.toLowerCase())) {
+            status = true;
+          }
+        }
+
+        return status;
+      });
+    } else {
+      return locations;
+    }
+  }, [locations, txt]);
 
   useEffect(() => {
     HttpClient.get("/locations")
       .then(({ data }) => {
-        console.log(data);
         setlocations(data.data);
       })
       .catch((err) => {
@@ -30,7 +53,11 @@ export default function Location(props) {
         <div className="mt-4 min-h-screen">
           <Resource
             columns={["_id", "address", "latitude", "longitude"]}
-            data={locations}
+            data={memoziedLocations}
+            onSearch={(e) => {
+              const text = e.target.value;
+              setText(text);
+            }}
             onSelection={() => {}}
             rowsPerPage={10}
             onAdd={() => {
@@ -41,7 +68,7 @@ export default function Location(props) {
                 title: "edit",
                 icon: "edit",
                 handler: (row) => {
-                  router(`/locations/${row._id}`, { replace: true });
+                  router(`/locations/edit/${row._id}`, { replace: true });
                 },
               },
               {
@@ -50,9 +77,13 @@ export default function Location(props) {
                 color: "error",
                 handler: (row) => {
                   if (window.confirm("are you sure ?")) {
-                    HttpClient.delete(`/admin/locations/${row._id}`)
+                    HttpClient.delete(`/admin/location/${row._id}`)
                       .then((res) => {
                         console.log(res);
+
+                        setlocations(
+                          locations.filter((l, i) => l?._id !== row?._id)
+                        );
                       })
                       .catch(console.log);
                   }

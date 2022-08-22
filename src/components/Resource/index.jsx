@@ -11,21 +11,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Fragment, useMemo, useRef, useState } from "react";
 import { useClickOutside } from "use-events";
 
-/*
-    action title,
-    action icon
-    action handler
-    action tooltip
-    action color
-*/
-
-/*
-      label: "title",
-      value: "",
-      type: "text",
-      applied: false,
-*/
-
 const SelectableFilter = (props) => {
   const { type, value, label, onChangeValue, options, onApply, applied } =
     props;
@@ -161,7 +146,6 @@ export default function Resource(props) {
       applied: false,
     },
   ]);
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="w-full">
@@ -177,72 +161,10 @@ export default function Resource(props) {
 
         <div className="flex flex-row items-center justify-between mt-3">
           <div>
-            <Popover isOpen={isOpen} borderWeight={0}>
-              <Popover.Trigger>
-                <button onClick={() => setIsOpen(!isOpen)}>
-                  <Text
-                    h6
-                    className="bg-light px-2 py-1  rounded-xl hover:bg-opacity-70 items-center"
-                  >
-                    <FontAwesomeIcon icon="filter" className="mr-2" />{" "}
-                    {filters.length}
-                  </Text>
-                </button>
-              </Popover.Trigger>
-              <Popover.Content>
-                <div className="p-4">
-                  {filters.map((f, i) => {
-                    if (!f.options) {
-                      return (
-                        <Filterable
-                          key={`filter-${i}`}
-                          type={f.type}
-                          value={f.value}
-                          label={f.label}
-                          applied={f.applied}
-                          onApply={(isSelected) => {
-                            const tmp = [...filters];
-                            tmp[i].applied = isSelected;
-                            setFilters(tmp);
-                          }}
-                          onChangeValue={(e) => {
-                            f.value = e.target.value;
-                            setFilters([...filters]);
-                          }}
-                        />
-                      );
-                    } else {
-                      return (
-                        <SelectableFilter
-                          key={`sec-filter-${i}`}
-                          type={f.type}
-                          value={f.value}
-                          label={f.label}
-                          applied={f.applied}
-                          onApply={(isSelected) => {
-                            const tmp = [...filters];
-                            tmp[i].applied = isSelected;
-                            setFilters(tmp);
-                          }}
-                          onChangeValue={(e) => {
-                            const tmp = [...filters];
-                            tmp[i].value = e;
-                            setFilters(tmp);
-                          }}
-                          options={f.options}
-                        />
-                      );
-                    }
-                  })}
-                  <Button color="primary">apply</Button>
-                </div>
-              </Popover.Content>
-            </Popover>
-          </div>
-          <div>
             <Input
               type="text"
               placeholder="Search"
+              onChange={props.onSearch}
               color="primary"
               bordered
               labelLeft={<FontAwesomeIcon icon="search" />}

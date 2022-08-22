@@ -3,6 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Layout from "../../components/Layout";
 import { AuthGuard } from "../../wrappers/Auth";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import HttpClient from "../../Http-Client";
+import { useState } from "react";
+import { LoaderWrapper } from "../../components/Loader";
 
 const ResoruceWidge = (props) => {
   const { stats, title, icon } = props;
@@ -22,41 +26,52 @@ const ResoruceWidge = (props) => {
 
 const stats = [
   {
-    stats: "12",
-    title: "Transactions",
+    title: "transactions",
     icon: "list-check",
   },
   {
-    stats: "12",
-    title: "Payments",
+    title: "payments",
     icon: "money-bill",
   },
   {
-    stats: "12",
-    title: "Accounts",
+    title: "accounts",
     icon: "user-circle",
-  },
-  {
-    stats: "12",
-    title: "Users",
-    icon: "users",
   },
 ];
 
 export default function Dashboard() {
   const user = useSelector((state) => state?.auth?.user);
+  const [counters, setCounters] = useState({});
+  const [countersLoad, setCountersLoad] = useState(false);
+
+  useEffect(() => {
+    HttpClient.get("/counters").then(({ data }) => {
+      setCounters(data?.counters);
+      setCountersLoad(true);
+    });
+  }, []);
   return (
     <AuthGuard>
       <Layout>
-        <section className="px-6 flex mt-2">
-          <Grid.Container gap={2}>
-            {stats.map((i, x) => {
-              return (
-                <ResoruceWidge icon={i.icon} title={i.title} stats={i.stats} />
-              );
-            })}
-          </Grid.Container>
-        </section>
+        {countersLoad ? (
+          <section className="px-6 flex mt-2 min-h-screen">
+            <div className="w-full">
+              <Grid.Container gap={2}>
+                {Object?.keys(counters)?.map((i, x) => {
+                  return (
+                    <ResoruceWidge
+                      icon={"info"}
+                      title={i}
+                      stats={counters[i]}
+                    />
+                  );
+                })}
+              </Grid.Container>
+            </div>
+          </section>
+        ) : (
+          <LoaderWrapper />
+        )}
       </Layout>
     </AuthGuard>
   );
