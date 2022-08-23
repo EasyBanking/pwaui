@@ -17,6 +17,8 @@ import EditAccounts from "./pages/accounts/edit";
 import EditUsers from "./pages/users/edit";
 import Chat from "./pages/chat";
 import Profile from "./pages/profile";
+import Contacts from "./pages/contact";
+import EditContacts from "./pages/contact/edit";
 
 // dashboard routes here
 
@@ -96,6 +98,14 @@ const routes = [
   {
     path: "/profile",
     Page: Profile,
+  },
+  {
+    path: "contact",
+    Page: Contacts,
+  },
+  {
+    path: "/contact/edit/:id",
+    Page: EditContacts,
   },
 ];
 

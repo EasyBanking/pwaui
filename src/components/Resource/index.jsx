@@ -273,12 +273,7 @@ export default function Resource(props) {
               </Table.Row>
             )}
           </Table.Body>
-          <Table.Pagination
-            noMargin
-            align="center"
-            rowsPerPage={rowsPerPage}
-            onPageChange={(page) => console.log({ page })}
-          />
+         
         </Table>
       </div>
     </div>

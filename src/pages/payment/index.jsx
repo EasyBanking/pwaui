@@ -5,26 +5,23 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { AuthGuard } from "../../wrappers/Auth";
+import HttpClient from "../../Http-Client";
 
 export default function Location(props) {
   const router = useNavigate();
   const [payments, setpayments] = useState([]);
   const [searchFilter, setSearchFilter] = useState("");
 
-  useEffect(
-    () =>
-      async function fetchData() {
-        try {
-          const data = await axios.get("http://localhost:4000/api/payment");
-          await setpayments(data.data);
-          console.log("Sucesss retriving data");
-          await console.log(payments);
-        } catch (error) {
-          console.log(error);
-        }
-      },
-    []
-  );
+  useEffect(() => {
+    HttpClient.get("/admin/payment")
+      .then((data) => {
+        setpayments(data.data);
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <AuthGuard>

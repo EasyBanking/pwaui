@@ -1,29 +1,28 @@
 import Layout from "../../components/Layout";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { AuthGuard } from "../../wrappers/Auth";
 import HttpClient from "../../Http-Client";
 import Resource from "../../components/Resource";
+import { useMemo } from "react";
 
-export default function Location(props) {
+export default function Contacts(props) {
   const router = useNavigate();
 
-  const [locations, setlocations] = useState([]);
+  const [contacts, setContacts] = useState([]);
 
   const [txt, setText] = useState("");
 
-  const filters = useMemo(() => ["address", "latitude", "longitude"], []);
+  const filters = useMemo(() => ["subject", "email", "message"], []);
 
-  const memoziedLocations = useMemo(() => {
+  const memoziedUrgents = useMemo(() => {
     if (txt !== "") {
-      return locations.filter((l) => {
+      return contacts.filter((l) => {
         let status = false;
 
         for (let i in filters) {
           const f = String(l[filters[i]]);
-
-          console.log();
 
           if (f.toLowerCase().includes(txt.toLowerCase())) {
             status = true;
@@ -33,14 +32,15 @@ export default function Location(props) {
         return status;
       });
     } else {
-      return locations;
+      return contacts;
     }
-  }, [locations, txt]);
+  }, [contacts, txt]);
 
   useEffect(() => {
-    HttpClient.get("/locations")
+    HttpClient.get("/admin/contact")
       .then(({ data }) => {
-        setlocations(data?.data);
+        console.log(data);
+        setContacts(data);
       })
       .catch((err) => {
         console.log(err);
@@ -52,23 +52,19 @@ export default function Location(props) {
       <Layout>
         <div className="mt-4 min-h-screen">
           <Resource
-            columns={["_id", "address", "latitude", "longitude"]}
-            data={memoziedLocations}
             onSearch={(e) => {
-              const text = e.target.value;
-              setText(text);
+              setText(e.target.value);
             }}
+            columns={["_id", "email", "subject", "message"]}
+            data={memoziedUrgents}
             onSelection={() => {}}
             rowsPerPage={10}
-            onAdd={() => {
-              router("/locations/add", { replace: true });
-            }}
             actions={[
               {
                 title: "edit",
                 icon: "edit",
                 handler: (row) => {
-                  router(`/locations/edit/${row._id}`, { replace: true });
+                  router(`/contact/edit/${row._id}`, { replace: true });
                 },
               },
               {
@@ -77,12 +73,10 @@ export default function Location(props) {
                 color: "error",
                 handler: (row) => {
                   if (window.confirm("are you sure ?")) {
-                    HttpClient.delete(`/admin/location/${row._id}`)
+                    HttpClient.delete(`/admin/contact/${row._id}`)
                       .then((res) => {
-                        console.log(res);
-
-                        setlocations(
-                          locations.filter((l, i) => l?._id !== row?._id)
+                        setContacts(
+                          contacts?.filter((l, i) => l?._id !== row?._id)
                         );
                       })
                       .catch(console.log);

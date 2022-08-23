@@ -78,6 +78,12 @@ const Menu = [
     visibleFor: ["Admin"],
   },
   {
+    name: "Contacts",
+    icon: "envelope",
+    path: "/contact",
+    visibleFor: ["Admin"],
+  },
+  {
     name: "Chat",
     icon: "headset",
     path: "/chat",
